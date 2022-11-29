@@ -11,7 +11,7 @@ public class Day03Tests
     public void SolvePart1Test(int input, int expected)
     {
         // act
-        var actual = Day03.SolvePart1(input);
+        var actual = Day03.Solve(input, 1);
 
         // assert
         actual.Should().Be(expected);
