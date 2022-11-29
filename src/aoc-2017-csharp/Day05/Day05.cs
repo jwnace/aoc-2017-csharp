@@ -2,35 +2,22 @@
 
 public static class Day05
 {
-    private static readonly IEnumerable<int> Input = File.ReadAllLines("Day05/day05.txt").Select(int.Parse);
+    private static readonly string[] Input = File.ReadAllLines("Day05/day05.txt");
 
-    public static int Part1()
+    public static int Part1() => Solve(1);
+
+    public static int Part2() => Solve(2);
+
+    private static int Solve(int part)
     {
-        var offsets = Input.ToArray();   
+        var offsets = Input.Select(int.Parse).ToArray();
         var steps = 0;
         var i = 0;
-        
+
         while (i >= 0 && i < offsets.Length)
         {
             var offset = offsets[i];
-            offsets[i]++;
-            i += offset;
-            steps++;
-        }
-
-        return steps;
-    }
-
-    public static int Part2()
-    {
-        var offsets = Input.ToArray();
-        var steps = 0;
-        var i = 0;
-        
-        while (i >= 0 && i < offsets.Length)
-        {
-            var offset = offsets[i];
-            offsets[i] += offset >= 3 ? -1 : 1;
+            offsets[i] += part == 2 && offset >= 3 ? -1 : 1;
             i += offset;
             steps++;
         }
