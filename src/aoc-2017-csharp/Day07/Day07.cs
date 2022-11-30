@@ -32,26 +32,24 @@ public static class Day07
 
     private static int GetUnbalancedNodeExpectedWeight(Node node)
     {
-        if (node.Children.Count <= 1)
-        {
-            throw new InvalidOperationException();
-        }
-
         Node? balanced = null;
         Node? unbalanced = null;
 
         while (true)
         {
-            var query = node.Children.GroupBy(c => c.TowerWeight).Select(g => new { TowerWeight = g.Key, Count = g.Count(), Nodes = g }).ToList();
+            var towerGroups = node.Children
+                .GroupBy(c => c.TowerWeight)
+                .Select(g => new { TowerWeight = g.Key, Count = g.Count(), Nodes = g })
+                .ToList();
 
-            if (query.Count != 2)
+            if (towerGroups.Count != 2)
             {
-                var difference = balanced.TowerWeight - unbalanced.TowerWeight;
+                var difference = balanced!.TowerWeight - unbalanced!.TowerWeight;
                 return unbalanced.Weight + difference;
             }
 
-            balanced = query.MaxBy(x => x.Count).Nodes.First();
-            unbalanced = query.MinBy(x => x.Count).Nodes.Single();
+            balanced = towerGroups.MaxBy(x => x.Count)!.Nodes.First();
+            unbalanced = towerGroups.MinBy(x => x.Count)!.Nodes.Single();
             node = unbalanced;
         }
     }
@@ -64,7 +62,6 @@ public static class Day07
         public string Name { get; init; }
         public int Weight { get; init; }
         public List<Node> Children { get; init; }
-        public Node? Parent { get; init; }
         public int TowerWeight { get; set; }
 
         private Node(string name, int weight)
