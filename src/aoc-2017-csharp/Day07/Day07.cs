@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace aoc_2017_csharp.Day07;
 
 public static class Day07
@@ -8,7 +6,7 @@ public static class Day07
 
     public static string Part1() => GetRootNodeName();
 
-    public static int Part2() => SolvePart2();
+    public static int Part2() => GetUnbalancedNodeExpectedWeight();
 
     private static string GetRootNodeName()
     {
@@ -21,13 +19,14 @@ public static class Day07
         return nodes.Single(x => !nodes.Any(y => y.Children.Contains(x.Name))).Name;
     }
 
-    private static int SolvePart2()
+    private static int GetUnbalancedNodeExpectedWeight()
     {
         var rootNodeName = GetRootNodeName();
         var rootNodeLine = Input.Single(x => x.StartsWith(rootNodeName));
         var root = Node.FromString(rootNodeLine);
 
         CalculateTowerWeights(root);
+
         return GetUnbalancedNodeExpectedWeight(root);
     }
 
@@ -57,12 +56,8 @@ public static class Day07
         }
     }
 
-    private static int CalculateTowerWeights(Node node)
-    {
+    private static int CalculateTowerWeights(Node node) =>
         node.TowerWeight = node.Weight + node.Children.Sum(CalculateTowerWeights);
-
-        return node.TowerWeight;
-    }
 
     private class Node
     {
@@ -72,7 +67,7 @@ public static class Day07
         public Node? Parent { get; init; }
         public int TowerWeight { get; set; }
 
-        public Node(string name, int weight)
+        private Node(string name, int weight)
         {
             Name = name;
             Weight = weight;
