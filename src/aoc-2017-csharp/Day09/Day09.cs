@@ -10,68 +10,64 @@ public static class Day09
 
     public static int CountGroups(string input)
     {
-        var groups = 0;
+        var groupCount = 0;
         var stack = new Stack<char>();
 
         for (var i = 0; i < input.Length; i++)
         {
             var c = input[i];
 
-            if (c == '!')
+            switch (c)
             {
-                i++; // increment i to skip over the next character
-            }
-            else if ((c == '{' || c == '<') && (stack.Count == 0 || stack.Peek() != '<'))
-            {
-                stack.Push(c);
-            }
-            else if (c == '}' && stack.Peek() == '{')
-            {
-                stack.Pop();
-                groups++;
-            }
-            else if (c == '>' && stack.Peek() == '<')
-            {
-                stack.Pop();
+                case '!':
+                    i++;
+                    break;
+                case '{' or '<' when stack.Count == 0 || stack.Peek() != '<':
+                    stack.Push(c);
+                    break;
+                case '}' when stack.Peek() == '{':
+                    stack.Pop();
+                    groupCount++;
+                    break;
+                case '>' when stack.Peek() == '<':
+                    stack.Pop();
+                    break;
             }
         }
 
-        return groups;
+        return groupCount;
     }
 
     public static int GetScore(string input)
     {
+        var totalScore = 0;
         var stack = new Stack<char>();
         var scores = new Stack<int>();
-        var totalScore = 0;
 
         for (var i = 0; i < input.Length; i++)
         {
             var c = input[i];
 
-            if (c == '!')
+            switch (c)
             {
-                i++; // increment i to skip over the next character
-            }
-            else if (c == '{' && (stack.Count == 0 || stack.Peek() != '<'))
-            {
-                stack.Push(c);
-
-                var temp = scores.TryPeek(out var value) ? value : 0;
-                scores.Push(temp + 1);
-            }
-            else if (c == '<' && (stack.Count == 0 || stack.Peek() != '<'))
-            {
-                stack.Push(c);
-            }
-            else if (c == '}' && stack.Peek() == '{')
-            {
-                stack.Pop();
-                totalScore += scores.Pop();
-            }
-            else if (c == '>' && stack.Peek() == '<')
-            {
-                stack.Pop();
+                case '!':
+                    i++;
+                    break;
+                case '{' when stack.Count == 0 || stack.Peek() != '<':
+                    var temp = scores.TryPeek(out var value) ? value : 0;
+                    scores.Push(temp + 1);
+                    stack.Push(c);
+                    break;
+                case '<' when stack.Count == 0 || stack.Peek() != '<':
+                    stack.Push(c);
+                    break;
+                case '}' when stack.Peek() == '{':
+                    stack.Pop();
+                    totalScore += scores.Pop();
+                    break;
+                case '>' when stack.Peek() == '<':
+                    stack.Pop();
+                    break;
             }
         }
 
@@ -80,39 +76,31 @@ public static class Day09
 
     public static int CountGarbage(string input)
     {
-        var count = 0;
+        var garbageCount = 0;
         var stack = new Stack<char>();
 
         for (var i = 0; i < input.Length; i++)
         {
             var c = input[i];
 
-            if (c == '!')
+            switch (c)
             {
-                i++; // increment i to skip over the next character
-            }
-            else if (c == '{' && (stack.Count == 0 || stack.Peek() != '<'))
-            {
-                stack.Push(c);
-            }
-            else if (c == '<' && (stack.Count == 0 || stack.Peek() != '<'))
-            {
-                stack.Push(c);
-            }
-            else if (c == '}' && stack.Peek() == '{')
-            {
-                stack.Pop();
-            }
-            else if (c == '>' && stack.Peek() == '<')
-            {
-                stack.Pop();
-            }
-            else if (stack.Peek() == '<')
-            {
-                count++;
+                case '!':
+                    i++;
+                    break;
+                case '{' or '<' when stack.Count == 0 || stack.Peek() != '<':
+                    stack.Push(c);
+                    break;
+                case '}' when stack.Peek() == '{':
+                case '>' when stack.Peek() == '<':
+                    stack.Pop();
+                    break;
+                default:
+                    garbageCount += stack.Peek() == '<' ? 1 : 0;
+                    break;
             }
         }
 
-        return count;
+        return garbageCount;
     }
 }
