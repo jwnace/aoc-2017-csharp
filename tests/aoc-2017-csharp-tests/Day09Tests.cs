@@ -12,7 +12,7 @@ public class Day09Tests
     [TestCase("{<a>,<a>,<a>,<a>}", 1)]
     [TestCase("{{<a>},{<a>},{<a>},{<a>}}", 5)]
     [TestCase("{{<!>},{<!>},{<!>},{<a>}}", 2)]
-    public void CountGroupsTest(string input, int expected)
+    public void CountGroups_ReturnsCorrectCount(string input, int expected)
     {
         // act
         var actual = Day09.CountGroups(input);
@@ -29,7 +29,7 @@ public class Day09Tests
     [TestCase("{{<ab>},{<ab>},{<ab>},{<ab>}}", 9)]
     [TestCase("{{<!!>},{<!!>},{<!!>},{<!!>}}", 9)]
     [TestCase("{{<a!>},{<a!>},{<a!>},{<ab>}}", 3)]
-    public void GetScoreTest(string input, int expected)
+    public void GetScore_ReturnsCorrectScore(string input, int expected)
     {
         // act
         var actual = Day09.GetScore(input);
@@ -45,7 +45,7 @@ public class Day09Tests
     [TestCase("<!!>", 0)]
     [TestCase("<!!!>>", 0)]
     [TestCase("""<{o"i!a,<{i<a>""", 10)]
-    public void CountGarbageTest(string input, int expected)
+    public void CountGarbage_ReturnsCorrectCount(string input, int expected)
     {
         // act
         var actual = Day09.CountGarbage(input);
@@ -55,10 +55,10 @@ public class Day09Tests
     }
 
     [Test]
-    public void Part1Test()
+    public void Part1_ReturnsCorrectAnswer()
     {
         // arrange
-        var expected = 0;
+        var expected = 20530;
 
         // act
         var actual = Day09.Part1();
@@ -68,10 +68,10 @@ public class Day09Tests
     }
 
     [Test]
-    public void Part2Test()
+    public void Part2_ReturnsCorrectAnswer()
     {
         // arrange
-        var expected = 0;
+        var expected = 9978;
 
         // act
         var actual = Day09.Part2();
