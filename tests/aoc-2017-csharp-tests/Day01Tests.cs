@@ -8,12 +8,9 @@ public class Day01Tests
     [TestCase("1111", 4)]
     [TestCase("1234", 0)]
     [TestCase("91212129", 9)]
-    public void SolvePart1Test(string input, int expected)
+    public void SolvePart1_ReturnsCorrectResult(string input, int expected)
     {
-        // act
         var actual = Day01.SolvePart1(input);
-
-        // assert
         actual.Should().Be(expected);
     }
 
@@ -22,12 +19,9 @@ public class Day01Tests
     [TestCase("123425", 4)]
     [TestCase("123123", 12)]
     [TestCase("12131415", 4)]
-    public void SolvePart2Test(string input, int expected)
+    public void SolvePart2_ReturnsCorrectResult(string input, int expected)
     {
-        // act
         var actual = Day01.SolvePart2(input);
-
-        // assert
         actual.Should().Be(expected);
     }
 }
