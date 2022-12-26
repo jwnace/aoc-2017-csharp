@@ -7,12 +7,9 @@ public class Day04Tests
     [TestCase("aa bb cc dd ee", true)]
     [TestCase("aa bb cc dd aa", false)]
     [TestCase("aa bb cc dd aaa", true)]
-    public void AllWordsAreUniqueTest(string input, bool expected)
+    public void AllWordsAreUnique_ReturnsCorrectResult(string input, bool expected)
     {
-        // act
         var actual = Day04.AllWordsAreUnique(input);
-
-        // assert
         actual.Should().Be(expected);
     }
 
@@ -21,12 +18,9 @@ public class Day04Tests
     [TestCase("a ab abc abd abf abj", true)]
     [TestCase("iiii oiii ooii oooi oooo", true)]
     [TestCase("oiii ioii iioi iiio", false)]
-    public void ContainsNoAnagramsTest(string input, bool expected)
+    public void ContainsNoAnagrams_ReturnsCorrectResult(string input, bool expected)
     {
-        // act
         var actual = Day04.ContainsNoAnagrams(input);
-
-        // assert
         actual.Should().Be(expected);
     }
 }
