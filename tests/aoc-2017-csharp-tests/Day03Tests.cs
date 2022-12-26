@@ -13,4 +13,20 @@ public class Day03Tests
         var actual = Day03.Solve(input, 1);
         actual.Should().Be(expected);
     }
+
+    [Test]
+    public void Part1_ReturnsCorrectAnswer()
+    {
+        var expected = 371;
+        var actual = Day03.Part1();
+        actual.Should().Be(expected);
+    }
+
+    [Test]
+    public void Part2_ReturnsCorrectAnswer()
+    {
+        var expected = 369_601;
+        var actual = Day03.Part2();
+        actual.Should().Be(expected);
+    }
 }

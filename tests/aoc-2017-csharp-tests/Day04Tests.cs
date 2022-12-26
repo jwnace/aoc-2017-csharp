@@ -23,4 +23,20 @@ public class Day04Tests
         var actual = Day04.ContainsNoAnagrams(input);
         actual.Should().Be(expected);
     }
+
+    [Test]
+    public void Part1_ReturnsCorrectAnswer()
+    {
+        var expected = 337;
+        var actual = Day04.Part1();
+        actual.Should().Be(expected);
+    }
+
+    [Test]
+    public void Part2_ReturnsCorrectAnswer()
+    {
+        var expected = 231;
+        var actual = Day04.Part2();
+        actual.Should().Be(expected);
+    }
 }

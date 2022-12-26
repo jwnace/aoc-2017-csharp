@@ -24,4 +24,20 @@ public class Day01Tests
         var actual = Day01.SolvePart2(input);
         actual.Should().Be(expected);
     }
+
+    [Test]
+    public void Part1_ReturnsCorrectAnswer()
+    {
+        var expected = 1_341;
+        var actual = Day01.Part1();
+        actual.Should().Be(expected);
+    }
+
+    [Test]
+    public void Part2_ReturnsCorrectAnswer()
+    {
+        var expected = 1_348;
+        var actual = Day01.Part2();
+        actual.Should().Be(expected);
+    }
 }
