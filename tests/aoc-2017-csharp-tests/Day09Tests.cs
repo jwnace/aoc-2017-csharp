@@ -14,10 +14,7 @@ public class Day09Tests
     [TestCase("{{<!>},{<!>},{<!>},{<a>}}", 2)]
     public void CountGroups_ReturnsCorrectCount(string input, int expected)
     {
-        // act
         var actual = Day09.CountGroups(input);
-
-        // assert
         actual.Should().Be(expected);
     }
 
@@ -31,10 +28,7 @@ public class Day09Tests
     [TestCase("{{<a!>},{<a!>},{<a!>},{<ab>}}", 3)]
     public void GetScore_ReturnsCorrectScore(string input, int expected)
     {
-        // act
         var actual = Day09.GetScore(input);
-
-        // assert
         actual.Should().Be(expected);
     }
 
@@ -47,36 +41,23 @@ public class Day09Tests
     [TestCase("""<{o"i!a,<{i<a>""", 10)]
     public void CountGarbage_ReturnsCorrectCount(string input, int expected)
     {
-        // act
         var actual = Day09.CountGarbage(input);
-
-        // assert
         actual.Should().Be(expected);
     }
 
     [Test]
     public void Part1_ReturnsCorrectAnswer()
     {
-        // arrange
         var expected = 20530;
-
-        // act
         var actual = Day09.Part1();
-
-        // assert
         actual.Should().Be(expected);
     }
 
     [Test]
     public void Part2_ReturnsCorrectAnswer()
     {
-        // arrange
         var expected = 9978;
-
-        // act
         var actual = Day09.Part2();
-
-        // assert
         actual.Should().Be(expected);
     }
 }
