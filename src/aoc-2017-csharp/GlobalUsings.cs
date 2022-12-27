@@ -11,3 +11,4 @@ global using aoc_2017_csharp.Day10;
 global using aoc_2017_csharp.Day11;
 global using aoc_2017_csharp.Day12;
 global using aoc_2017_csharp.Day13;
+global using aoc_2017_csharp.Day14;
