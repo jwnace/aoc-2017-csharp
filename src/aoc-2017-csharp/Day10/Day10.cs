@@ -34,7 +34,7 @@ public static class Day10
         return Convert.ToHexString(denseHash);
     }
 
-    private static byte[] GetList(int length)
+    public static byte[] GetList(int length)
     {
         var result = new byte[length];
 
@@ -46,7 +46,7 @@ public static class Day10
         return result;
     }
 
-    private static void KnotHash(byte[] list, byte[] lengths)
+    public static void KnotHash(byte[] list, byte[] lengths)
     {
         var currentPosition = 0;
         var skipSize = 0;
@@ -60,7 +60,7 @@ public static class Day10
         }
     }
 
-    private static void KnotHash(byte[] list, byte[] lengths, ref int currentPosition, ref int skipSize)
+    public static void KnotHash(byte[] list, byte[] lengths, ref int currentPosition, ref int skipSize)
     {
         foreach (var length in lengths)
         {
