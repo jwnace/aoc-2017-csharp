@@ -9,39 +9,25 @@ public static class Day15
 
     public static int Part1()
     {
-        var result = 0;
-
         var generatorA = new Generator(Input[0], 16_807L);
         var generatorB = new Generator(Input[1], 48_271L);
 
-        for (var i = 0; i < 40_000_000L; i++)
-        {
-            var nextA = generatorA.GetNextValue();
-            var nextB = generatorB.GetNextValue();
-
-            var binaryA = Convert.ToString(nextA, 2).PadLeft(32, '0');
-            var binaryB = Convert.ToString(nextB, 2).PadLeft(32, '0');
-
-            var last16A = binaryA[^16..];
-            var last16B = binaryB[^16..];
-
-            if (last16A == last16B)
-            {
-                result++;
-            }
-        }
-
-        return result;
+        return CountMatches(generatorA, generatorB, 40_000_000L);
     }
 
     public static int Part2()
     {
-        var result = 0;
-
         var generatorA = new Generator(Input[0], 16_807L, 4);
         var generatorB = new Generator(Input[1], 48_271L, 8);
 
-        for (var i = 0; i < 5_000_000L; i++)
+        return CountMatches(generatorA, generatorB, 5_000_000);
+    }
+
+    private static int CountMatches(Generator generatorA, Generator generatorB, long pairsToCheck)
+    {
+        var result = 0;
+
+        for (var i = 0; i < pairsToCheck; i++)
         {
             var nextA = generatorA.GetNextValue();
             var nextB = generatorB.GetNextValue();
