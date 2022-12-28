@@ -2,11 +2,9 @@
 
 public static class Day10
 {
+    private static readonly string InputAsString = File.ReadAllText("Day10/day10.txt");
     private static readonly byte[] InputAsNumbers =
         File.ReadAllText("Day10/day10.txt").Split(',').Select(byte.Parse).ToArray();
-
-    private static readonly byte[] InputAsBytes =
-        File.ReadAllText("Day10/day10.txt").Select(Convert.ToByte).ToArray();
 
     public static int Part1()
     {
@@ -18,23 +16,9 @@ public static class Day10
         return values[0] * values[1];
     }
 
-    public static string Part2()
-    {
-        var list = GetList(256);
-        var lengths = InputAsBytes.Concat(new byte[] { 17, 31, 73, 47, 23 }).ToArray();
-        var currentPosition = 0;
-        var skipSize = 0;
+    public static string Part2() => KnotHasher.GetKnotHash(InputAsString);
 
-        for (var i = 0; i < 64; i++)
-        {
-            KnotHash(list, lengths, ref currentPosition, ref skipSize);
-        }
-
-        var denseHash = list.Chunk(16).Select(chunk => chunk.Aggregate((a, b) => (byte)(a ^ b))).ToArray();
-        return Convert.ToHexString(denseHash);
-    }
-
-    public static byte[] GetList(int length)
+    private static byte[] GetList(int length)
     {
         var result = new byte[length];
 
@@ -46,22 +30,11 @@ public static class Day10
         return result;
     }
 
-    public static void KnotHash(byte[] list, byte[] lengths)
+    private static void KnotHash(byte[] list, byte[] lengths)
     {
         var currentPosition = 0;
         var skipSize = 0;
 
-        foreach (var length in lengths)
-        {
-            ReverseSublist(currentPosition, length, list);
-
-            currentPosition = (currentPosition + length + skipSize) % list.Length;
-            skipSize++;
-        }
-    }
-
-    public static void KnotHash(byte[] list, byte[] lengths, ref int currentPosition, ref int skipSize)
-    {
         foreach (var length in lengths)
         {
             ReverseSublist(currentPosition, length, list);

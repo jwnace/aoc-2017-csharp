@@ -15,7 +15,7 @@ public class Day10Tests
     [Test]
     public void Part2_ReturnsCorrectAnswer()
     {
-        var expected = "0C2F794B2EB555F7830766BF8FB65A16";
+        var expected = "0c2f794b2eb555f7830766bf8fb65a16";
         var actual = Day10.Part2();
         actual.Should().Be(expected);
     }
