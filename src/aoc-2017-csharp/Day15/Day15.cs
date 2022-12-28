@@ -32,13 +32,11 @@ public static class Day15
             var nextA = generatorA.GetNextValue();
             var nextB = generatorB.GetNextValue();
 
-            var binaryA = Convert.ToString(nextA, 2).PadLeft(32, '0');
-            var binaryB = Convert.ToString(nextB, 2).PadLeft(32, '0');
+            var mask = 0b1111111111111111;
+            var tempA = nextA & mask;
+            var tempB = nextB & mask;
 
-            var last16A = binaryA[^16..];
-            var last16B = binaryB[^16..];
-
-            if (last16A == last16B)
+            if (tempA == tempB)
             {
                 result++;
             }
