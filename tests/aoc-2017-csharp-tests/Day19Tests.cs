@@ -7,7 +7,7 @@ public class Day19Tests
     [Test]
     public void Part1_ReturnsCorrectAnswer()
     {
-        var expected = 0;
+        var expected = "HATBMQJYZ";
         var actual = Day19.Part1();
         actual.Should().Be(expected);
     }
@@ -15,7 +15,7 @@ public class Day19Tests
     [Test]
     public void Part2_ReturnsCorrectAnswer()
     {
-        var expected = 0;
+        var expected = 16_332;
         var actual = Day19.Part2();
         actual.Should().Be(expected);
     }
