@@ -50,7 +50,7 @@ public static class Day23
     private static long RunOptimizedProgram()
     {
         ulong step = 0;
-        long b, c, d, e, f, g, h = 0;
+        long b, c, d, e, f, h = 0;
 
         b = 99 * 100 + 100_000;
         c = b + 17_000;
@@ -60,59 +60,41 @@ public static class Day23
             f = 1;
             d = 2;
 
-            while (true)
+            do
             {
-                if (step % 10_000 == 0)
+                if (step % 1_000 == 0)
                 {
                     Console.WriteLine(step);
                 }
 
                 e = 2;
 
-                while (true)
+                do
                 {
-                    g = d * e - b;
-
-                    if (g == 0)
+                    if (d * e == b)
                     {
                         f = 0;
                     }
 
                     e++;
-                    g = e - b;
-
-                    if (g == 0)
-                    {
-                        break;
-                    }
-                }
+                } while (e != b);
 
                 d++;
-                g = d - b;
-
-                if (g == 0)
-                {
-                    break;
-                }
 
                 step++;
-            }
+            } while (d != b);
 
             if (f == 0)
             {
                 h++;
             }
 
-            g = b - c;
-
-            if (g == 0)
+            if (b == c)
             {
                 return h;
             }
 
             b += 17;
         }
-
-        throw new Exception("something went horribly wrong");
     }
 }
