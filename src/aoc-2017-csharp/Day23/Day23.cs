@@ -96,106 +96,71 @@ public static class Day23
     private static long RunOptimizedProgram()
     {
         long a, b, c, d, e, f, g, h = 0;
-
-        // instructions say to start with register a = 1
         a = 1;
 
-        // set b 99
-        b = 99;
+        b = 99;             // set b 99
+        c = b;              // set c b
+        b *= 100;           // mul b 100
+        b -= -100_000;      // sub b -100000
+        c = b;              // set c b
+        c -= -17_000;       // sub c -17000
 
-        // set c b
-        c = b;
+        while (true)
+        {
+            f = 1; // set f 1
+            d = 2; // set d 2
 
-        // jnz a 2
-        // a is always going to be greater than zero, so we will always skip the next instruction
+            while (true)
+            {
+                e = 2; // set e 2
 
-        // jnz 1 5
-        // this instruction will always be skipped
+                while (true)
+                {
+                    g = d; // set g d
+                    g *= e; // mul g e
+                    g -= b; // sub g b
 
-        // mul b 100
-        b *= 100;
+                    if (g == 0) // jnz g 2
+                    {
+                        f = 0; // set f 0
+                    }
 
-        // sub b -100000
-        b -= -100_000;
+                    e -= -1; // sub e -1
+                    g = e; // set g e
+                    g -= b; // sub g b
 
-        // set c b
-        c = b;
+                    if (g == 0) // jnz g -8
+                    {
+                        break;
+                    }
+                }
 
-        // sub c -17000
-        c -= -17_000;
+                d -= -1; // sub d -1
+                g = d; // set g d
+                g -= b; // sub g b
 
-        // set f 1
-        f = 1;
+                if (g == 0) // jnz g -13
+                {
+                    break;
+                }
+            }
 
-        // set d 2
-        d = 2;
+            if (f == 0) // jnz f 2
+            {
+                h -= 1; // sub h -1
+            }
 
-        // set e 2
-        e = 2;
+            g = b; // set g b
+            g -= c; // sub g c
 
-        // set g d
-        g = d;
+            if (g == 0) // jnz g 2
+            {
+                return h;
+            }
 
-        // mul g e
-        g *= e;
+            b -= -17; // sub b -17
+        }
 
-        // sub g b
-        g -= b;
-
-        // jnz g 2
-        // TODO: figure this out
-
-        // set f 0
-        f = 0;
-
-        // sub e -1
-        e -= -1;
-
-        // set g e
-        g = e;
-
-        // sub g b
-        g -= b;
-
-        // jnz g -8
-        // TODO: figure this out
-
-        // sub d -1
-        d -= -1;
-
-        // set g d
-        g = d;
-
-        // sub g b
-        g -= b;
-
-        // jnz g -13
-        // TODO: figure this out
-
-        // jnz f 2
-        // TODO: figure this out
-
-        // sub h -1
-        h -= 1;
-
-        // set g b
-        g = b;
-
-        // sub g c
-        g -= c;
-
-        // jnz g 2
-        // TODO: figure this out
-
-        // jnz 1 3
-        // TODO: figure this out
-
-        // sub b -17
-        b -= -17;
-
-        // jnz 1 -23
-        // TODO: figure this out
-
-        throw new NotImplementedException();
+        throw new Exception("something went horribly wrong");
     }
 }
