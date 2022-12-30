@@ -4,7 +4,11 @@ public static class Day21
 {
     private static readonly string[] Input = File.ReadAllLines("Day21/day21.txt");
 
-    public static int Part1()
+    public static int Part1() => Solve(5);
+
+    public static int Part2() => Solve(18);
+
+    private static int Solve(int iterations)
     {
         var rules = GetRules();
 
@@ -15,16 +19,14 @@ public static class Day21
             new[] { '#', '#', '#' },
         };
 
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < iterations; i++)
         {
             if (image.Length % 2 == 0)
             {
-                // TODO: divide up into 2x2 chunks
+                // divide up into 2x2 chunks
                 var chunkSize = 2;
                 var chunksPerRow = image.Length / chunkSize;
-                var chunkCount = chunksPerRow * chunksPerRow;
                 var chunks = new List<char[][]>();
-                var enhancedChunks = new List<char[][]>();
 
                 for (var r = 0; r < chunksPerRow * chunkSize; r += chunkSize)
                 {
@@ -40,22 +42,16 @@ public static class Day21
                     }
                 }
 
-                foreach (var chunk in chunks)
-                {
-                    var newChunk = EnhanceChunk(rules, chunk);
-                    enhancedChunks.Add(newChunk);
-                }
+                var enhancedChunks = chunks.Select(chunk => EnhanceChunk(rules, chunk)).ToList();
 
-                image = CombineChunks(enhancedChunks) ?? image;
+                image = CombineChunks(enhancedChunks);
             }
             else if (image.Length % 3 == 0)
             {
-                // TODO: divide up into 3x3 chunks
+                // divide up into 3x3 chunks
                 var chunkSize = 3;
                 var chunksPerRow = image.Length / chunkSize;
-                var chunkCount = chunksPerRow * chunksPerRow;
                 var chunks = new List<char[][]>();
-                var enhancedChunks = new List<char[][]>();
 
                 for (var r = 0; r < chunksPerRow * chunkSize; r += chunkSize)
                 {
@@ -72,104 +68,11 @@ public static class Day21
                     }
                 }
 
-                foreach (var chunk in chunks)
-                {
-                    var newChunk = EnhanceChunk(rules, chunk);
-                    enhancedChunks.Add(newChunk);
-                }
+                var enhancedChunks = chunks.Select(chunk => EnhanceChunk(rules, chunk)).ToList();
 
-                image = CombineChunks(enhancedChunks) ?? image;
+                image = CombineChunks(enhancedChunks);
             }
-
-            // Console.WriteLine(string.Join(Environment.NewLine, image.Select(row => string.Join("", row))));
-            // Console.WriteLine();
         }
-
-        return image.Sum(chars => chars.Count(c => c == '#'));
-    }
-
-    public static int Part2()
-    {
-        var rules = GetRules();
-
-        var image = new[]
-        {
-            new[] { '.', '#', '.' },
-            new[] { '.', '.', '#' },
-            new[] { '#', '#', '#' },
-        };
-
-        for (var i = 0; i < 18; i++)
-        {
-            if (image.Length % 2 == 0)
-            {
-                // TODO: divide up into 2x2 chunks
-                var chunkSize = 2;
-                var chunksPerRow = image.Length / chunkSize;
-                var chunkCount = chunksPerRow * chunksPerRow;
-                var chunks = new List<char[][]>();
-                var enhancedChunks = new List<char[][]>();
-
-                for (var r = 0; r < chunksPerRow * chunkSize; r += chunkSize)
-                {
-                    for (var c = 0; c < chunksPerRow * chunkSize; c += chunkSize)
-                    {
-                        var chunk = new[]
-                        {
-                            new[] { image[r    ][c], image[r    ][c + 1], },
-                            new[] { image[r + 1][c], image[r + 1][c + 1], },
-                        };
-
-                        chunks.Add(chunk);
-                    }
-                }
-
-                foreach (var chunk in chunks)
-                {
-                    var newChunk = EnhanceChunk(rules, chunk);
-                    enhancedChunks.Add(newChunk);
-                }
-
-                image = CombineChunks(enhancedChunks) ?? image;
-            }
-            else if (image.Length % 3 == 0)
-            {
-                // TODO: divide up into 3x3 chunks
-                var chunkSize = 3;
-                var chunksPerRow = image.Length / chunkSize;
-                var chunkCount = chunksPerRow * chunksPerRow;
-                var chunks = new List<char[][]>();
-                var enhancedChunks = new List<char[][]>();
-
-                for (var r = 0; r < chunksPerRow * chunkSize; r += chunkSize)
-                {
-                    for (var c = 0; c < chunksPerRow * chunkSize; c += chunkSize)
-                    {
-                        var chunk = new[]
-                        {
-                            new[] { image[r    ][c], image[r    ][c + 1], image[r    ][c + 2] },
-                            new[] { image[r + 1][c], image[r + 1][c + 1], image[r + 1][c + 2] },
-                            new[] { image[r + 2][c], image[r + 2][c + 1], image[r + 2][c + 2] },
-                        };
-
-                        chunks.Add(chunk);
-                    }
-                }
-
-                foreach (var chunk in chunks)
-                {
-                    var newChunk = EnhanceChunk(rules, chunk);
-                    enhancedChunks.Add(newChunk);
-                }
-
-                image = CombineChunks(enhancedChunks) ?? image;
-            }
-
-            // Console.WriteLine(string.Join(Environment.NewLine, image.Select(row => string.Join("", row))));
-            // Console.WriteLine();
-        }
-
-
 
         return image.Sum(chars => chars.Count(c => c == '#'));
     }
@@ -252,171 +155,171 @@ public static class Day21
         return rules;
     }
 
-    private static char[][][] GetVariations(string[] leftValues)
+    private static char[][][] GetVariations(string[] pattern)
     {
-        if (leftValues.Length == 2)
+        if (pattern.Length == 2)
         {
             return new[]
             {
                 new[]
                 {
-                    new[] { leftValues[0][0], leftValues[0][1] },
-                    new[] { leftValues[1][0], leftValues[1][1] },
+                    new[] { pattern[0][0], pattern[0][1] },
+                    new[] { pattern[1][0], pattern[1][1] },
                 },
                 new[]
                 {
-                    new[] { leftValues[1][0], leftValues[0][0] },
-                    new[] { leftValues[1][1], leftValues[0][1] },
+                    new[] { pattern[1][0], pattern[0][0] },
+                    new[] { pattern[1][1], pattern[0][1] },
                 },
                 new[]
                 {
-                    new[] { leftValues[1][1], leftValues[1][0] },
-                    new[] { leftValues[0][1], leftValues[0][0] },
+                    new[] { pattern[1][1], pattern[1][0] },
+                    new[] { pattern[0][1], pattern[0][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[0][1], leftValues[1][1] },
-                    new[] { leftValues[0][0], leftValues[1][0] },
+                    new[] { pattern[0][1], pattern[1][1] },
+                    new[] { pattern[0][0], pattern[1][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[0][1], leftValues[0][0] },
-                    new[] { leftValues[1][1], leftValues[1][0] },
+                    new[] { pattern[0][1], pattern[0][0] },
+                    new[] { pattern[1][1], pattern[1][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[1][1], leftValues[0][1] },
-                    new[] { leftValues[1][0], leftValues[0][0] },
+                    new[] { pattern[1][1], pattern[0][1] },
+                    new[] { pattern[1][0], pattern[0][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[1][0], leftValues[1][1] },
-                    new[] { leftValues[0][0], leftValues[0][1] },
+                    new[] { pattern[1][0], pattern[1][1] },
+                    new[] { pattern[0][0], pattern[0][1] },
                 },
                 new[]
                 {
-                    new[] { leftValues[0][0], leftValues[1][0] },
-                    new[] { leftValues[0][1], leftValues[1][1] },
+                    new[] { pattern[0][0], pattern[1][0] },
+                    new[] { pattern[0][1], pattern[1][1] },
                 },
             };
         }
 
-        if (leftValues.Length == 3)
+        if (pattern.Length == 3)
         {
             return new[]
             {
                 new[]
                 {
-                    new[] { leftValues[0][0], leftValues[0][1], leftValues[0][2] },
-                    new[] { leftValues[1][0], leftValues[1][1], leftValues[1][2] },
-                    new[] { leftValues[2][0], leftValues[2][1], leftValues[2][2] },
+                    new[] { pattern[0][0], pattern[0][1], pattern[0][2] },
+                    new[] { pattern[1][0], pattern[1][1], pattern[1][2] },
+                    new[] { pattern[2][0], pattern[2][1], pattern[2][2] },
                 },
                 new[]
                 {
-                    new[] { leftValues[2][0], leftValues[1][0], leftValues[0][0] },
-                    new[] { leftValues[2][1], leftValues[1][1], leftValues[0][1] },
-                    new[] { leftValues[2][2], leftValues[1][2], leftValues[0][2] },
+                    new[] { pattern[2][0], pattern[1][0], pattern[0][0] },
+                    new[] { pattern[2][1], pattern[1][1], pattern[0][1] },
+                    new[] { pattern[2][2], pattern[1][2], pattern[0][2] },
                 },
                 new[]
                 {
-                    new[] { leftValues[2][2], leftValues[2][1], leftValues[2][0] },
-                    new[] { leftValues[1][2], leftValues[1][1], leftValues[1][0] },
-                    new[] { leftValues[0][2], leftValues[0][1], leftValues[0][0] },
+                    new[] { pattern[2][2], pattern[2][1], pattern[2][0] },
+                    new[] { pattern[1][2], pattern[1][1], pattern[1][0] },
+                    new[] { pattern[0][2], pattern[0][1], pattern[0][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[0][2], leftValues[1][2], leftValues[2][2] },
-                    new[] { leftValues[0][1], leftValues[1][1], leftValues[2][1] },
-                    new[] { leftValues[0][0], leftValues[1][0], leftValues[2][0] },
+                    new[] { pattern[0][2], pattern[1][2], pattern[2][2] },
+                    new[] { pattern[0][1], pattern[1][1], pattern[2][1] },
+                    new[] { pattern[0][0], pattern[1][0], pattern[2][0] },
                 },
 
                 new[]
                 {
-                    new[] { leftValues[0][2], leftValues[0][1], leftValues[0][0] },
-                    new[] { leftValues[1][2], leftValues[1][1], leftValues[1][0] },
-                    new[] { leftValues[2][2], leftValues[2][1], leftValues[2][0] },
+                    new[] { pattern[0][2], pattern[0][1], pattern[0][0] },
+                    new[] { pattern[1][2], pattern[1][1], pattern[1][0] },
+                    new[] { pattern[2][2], pattern[2][1], pattern[2][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[2][2], leftValues[1][2], leftValues[0][2] },
-                    new[] { leftValues[2][1], leftValues[1][1], leftValues[0][1] },
-                    new[] { leftValues[2][0], leftValues[1][0], leftValues[0][0] },
+                    new[] { pattern[2][2], pattern[1][2], pattern[0][2] },
+                    new[] { pattern[2][1], pattern[1][1], pattern[0][1] },
+                    new[] { pattern[2][0], pattern[1][0], pattern[0][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[2][0], leftValues[2][1], leftValues[2][2] },
-                    new[] { leftValues[1][0], leftValues[1][1], leftValues[1][2] },
-                    new[] { leftValues[0][0], leftValues[0][1], leftValues[0][2] },
+                    new[] { pattern[2][0], pattern[2][1], pattern[2][2] },
+                    new[] { pattern[1][0], pattern[1][1], pattern[1][2] },
+                    new[] { pattern[0][0], pattern[0][1], pattern[0][2] },
                 },
                 new[]
                 {
-                    new[] { leftValues[0][0], leftValues[1][0], leftValues[2][0] },
-                    new[] { leftValues[0][1], leftValues[1][1], leftValues[2][1] },
-                    new[] { leftValues[0][2], leftValues[1][2], leftValues[2][2] },
+                    new[] { pattern[0][0], pattern[1][0], pattern[2][0] },
+                    new[] { pattern[0][1], pattern[1][1], pattern[2][1] },
+                    new[] { pattern[0][2], pattern[1][2], pattern[2][2] },
                 },
             };
         }
 
-        if (leftValues.Length == 4)
+        if (pattern.Length == 4)
         {
             return new[]
             {
                 new[]
                 {
-                    new[] { leftValues[0][0], leftValues[0][1], leftValues[0][2], leftValues[0][3] },
-                    new[] { leftValues[1][0], leftValues[1][1], leftValues[1][2], leftValues[1][3] },
-                    new[] { leftValues[2][0], leftValues[2][1], leftValues[2][2], leftValues[2][3] },
-                    new[] { leftValues[3][0], leftValues[3][1], leftValues[3][2], leftValues[3][3] },
+                    new[] { pattern[0][0], pattern[0][1], pattern[0][2], pattern[0][3] },
+                    new[] { pattern[1][0], pattern[1][1], pattern[1][2], pattern[1][3] },
+                    new[] { pattern[2][0], pattern[2][1], pattern[2][2], pattern[2][3] },
+                    new[] { pattern[3][0], pattern[3][1], pattern[3][2], pattern[3][3] },
                 },
                 new[]
                 {
-                    new[] { leftValues[3][0], leftValues[2][0], leftValues[1][0], leftValues[0][0] },
-                    new[] { leftValues[3][1], leftValues[2][1], leftValues[1][1], leftValues[0][1] },
-                    new[] { leftValues[3][2], leftValues[2][2], leftValues[1][2], leftValues[0][2] },
-                    new[] { leftValues[3][3], leftValues[2][3], leftValues[1][3], leftValues[0][3] },
+                    new[] { pattern[3][0], pattern[2][0], pattern[1][0], pattern[0][0] },
+                    new[] { pattern[3][1], pattern[2][1], pattern[1][1], pattern[0][1] },
+                    new[] { pattern[3][2], pattern[2][2], pattern[1][2], pattern[0][2] },
+                    new[] { pattern[3][3], pattern[2][3], pattern[1][3], pattern[0][3] },
                 },
                 new[]
                 {
-                    new[] { leftValues[3][3], leftValues[3][2], leftValues[3][1], leftValues[3][0] },
-                    new[] { leftValues[2][3], leftValues[2][2], leftValues[2][1], leftValues[2][0] },
-                    new[] { leftValues[1][3], leftValues[1][2], leftValues[1][1], leftValues[1][0] },
-                    new[] { leftValues[0][3], leftValues[0][2], leftValues[0][1], leftValues[0][0] },
+                    new[] { pattern[3][3], pattern[3][2], pattern[3][1], pattern[3][0] },
+                    new[] { pattern[2][3], pattern[2][2], pattern[2][1], pattern[2][0] },
+                    new[] { pattern[1][3], pattern[1][2], pattern[1][1], pattern[1][0] },
+                    new[] { pattern[0][3], pattern[0][2], pattern[0][1], pattern[0][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[0][3], leftValues[1][3], leftValues[2][3], leftValues[3][3] },
-                    new[] { leftValues[0][2], leftValues[1][2], leftValues[2][2], leftValues[3][2] },
-                    new[] { leftValues[0][1], leftValues[1][1], leftValues[2][1], leftValues[3][1] },
-                    new[] { leftValues[0][0], leftValues[1][0], leftValues[2][0], leftValues[3][0] },
+                    new[] { pattern[0][3], pattern[1][3], pattern[2][3], pattern[3][3] },
+                    new[] { pattern[0][2], pattern[1][2], pattern[2][2], pattern[3][2] },
+                    new[] { pattern[0][1], pattern[1][1], pattern[2][1], pattern[3][1] },
+                    new[] { pattern[0][0], pattern[1][0], pattern[2][0], pattern[3][0] },
                 },
 
                 new[]
                 {
-                    new[] { leftValues[0][3], leftValues[0][2], leftValues[0][1], leftValues[0][0] },
-                    new[] { leftValues[1][3], leftValues[1][2], leftValues[1][1], leftValues[1][0] },
-                    new[] { leftValues[2][3], leftValues[2][2], leftValues[2][1], leftValues[2][0] },
-                    new[] { leftValues[3][3], leftValues[3][2], leftValues[3][1], leftValues[3][0] },
+                    new[] { pattern[0][3], pattern[0][2], pattern[0][1], pattern[0][0] },
+                    new[] { pattern[1][3], pattern[1][2], pattern[1][1], pattern[1][0] },
+                    new[] { pattern[2][3], pattern[2][2], pattern[2][1], pattern[2][0] },
+                    new[] { pattern[3][3], pattern[3][2], pattern[3][1], pattern[3][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[3][3], leftValues[2][3], leftValues[1][3], leftValues[0][3] },
-                    new[] { leftValues[3][2], leftValues[2][2], leftValues[1][2], leftValues[0][2] },
-                    new[] { leftValues[3][1], leftValues[2][1], leftValues[1][1], leftValues[0][1] },
-                    new[] { leftValues[3][0], leftValues[2][0], leftValues[1][0], leftValues[0][0] },
+                    new[] { pattern[3][3], pattern[2][3], pattern[1][3], pattern[0][3] },
+                    new[] { pattern[3][2], pattern[2][2], pattern[1][2], pattern[0][2] },
+                    new[] { pattern[3][1], pattern[2][1], pattern[1][1], pattern[0][1] },
+                    new[] { pattern[3][0], pattern[2][0], pattern[1][0], pattern[0][0] },
                 },
                 new[]
                 {
-                    new[] { leftValues[3][0], leftValues[3][1], leftValues[3][2], leftValues[3][3] },
-                    new[] { leftValues[2][0], leftValues[2][1], leftValues[2][2], leftValues[2][3] },
-                    new[] { leftValues[1][0], leftValues[1][1], leftValues[1][2], leftValues[1][3] },
-                    new[] { leftValues[0][0], leftValues[0][1], leftValues[0][2], leftValues[0][3] },
+                    new[] { pattern[3][0], pattern[3][1], pattern[3][2], pattern[3][3] },
+                    new[] { pattern[2][0], pattern[2][1], pattern[2][2], pattern[2][3] },
+                    new[] { pattern[1][0], pattern[1][1], pattern[1][2], pattern[1][3] },
+                    new[] { pattern[0][0], pattern[0][1], pattern[0][2], pattern[0][3] },
                 },
                 new[]
                 {
-                    new[] { leftValues[0][0], leftValues[1][0], leftValues[2][0], leftValues[3][0] },
-                    new[] { leftValues[0][1], leftValues[1][1], leftValues[2][1], leftValues[3][1] },
-                    new[] { leftValues[0][2], leftValues[1][2], leftValues[2][2], leftValues[3][2] },
-                    new[] { leftValues[0][3], leftValues[1][3], leftValues[2][3], leftValues[3][3] },
+                    new[] { pattern[0][0], pattern[1][0], pattern[2][0], pattern[3][0] },
+                    new[] { pattern[0][1], pattern[1][1], pattern[2][1], pattern[3][1] },
+                    new[] { pattern[0][2], pattern[1][2], pattern[2][2], pattern[3][2] },
+                    new[] { pattern[0][3], pattern[1][3], pattern[2][3], pattern[3][3] },
                 },
             };
         }
