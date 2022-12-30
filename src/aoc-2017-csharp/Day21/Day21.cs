@@ -79,11 +79,6 @@ public static class Day21
 
     private static char[][] CombineChunks(List<char[][]> chunks)
     {
-        if (chunks.Count == 1)
-        {
-            return chunks.Single();
-        }
-
         var chunksPerRow = (int)Math.Sqrt(chunks.Count);
         var chunkSize = chunks[0].Length;
         var image = new List<List<char>>();
@@ -98,37 +93,22 @@ public static class Day21
         return image.Select(x => x.ToArray()).ToArray();
     }
 
-    private static char[][] EnhanceChunk(List<Rule> rules, char[][] image)
+    private static char[][] EnhanceChunk(List<Rule> rules, char[][] chunk)
     {
-        var firstMatchingRule = rules
-            .FirstOrDefault(rule => rule.InputPatterns.Any(pattern => AreEquivalent(pattern, image)));
+        var firstMatchingRule = GetFirstMatchingRule(rules, chunk);
 
         if (firstMatchingRule is null)
         {
             throw new InvalidOperationException("couldn't find a matching rule!");
-            return image;
         }
 
-        var firstMatchingPattern = firstMatchingRule.InputPatterns
-            .Select((pattern, index) => new { Pattern = pattern, Index = index })
-            .FirstOrDefault(x => AreEquivalent(x.Pattern, image));
-
-        if (firstMatchingPattern is null)
-        {
-            throw new InvalidOperationException("couldn't find a matching pattern!");
-            return image;
-        }
-
-        // TODO: we don't actually need to match the index, we can just use index 0
-        // var index = firstMatchingPattern.Index;
-        var index = 0;
-        var outputPattern = firstMatchingRule.OutputPatterns[index];
-
-        // TODO: this only works when the entire image matches a pattern
-        // TODO: we need to implement splitting the image up into sub-sections and matching them to patterns
-        image = outputPattern;
-        return image;
+        // HACK: I originally thought that we needed to use the rotated output pattern, but we actually don't
+        // we can just use the original output pattern without applying any transformations
+        return firstMatchingRule.OutputPatterns[0];
     }
+
+    private static Rule? GetFirstMatchingRule(List<Rule> rules, char[][] chunk) =>
+        rules.FirstOrDefault(rule => rule.InputPatterns.Any(pattern => AreEquivalent(pattern, chunk)));
 
     private static bool AreEquivalent(char[][] pattern, char[][] image) =>
         pattern.SelectMany(c => c).SequenceEqual(image.SelectMany(c => c));
