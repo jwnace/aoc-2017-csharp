@@ -7,7 +7,7 @@ public class Day23Tests
     [Test]
     public void Part1_ReturnsCorrectAnswer()
     {
-        var expected = 0;
+        var expected = 9_409;
         var actual = Day23.Part1();
         actual.Should().Be(expected);
     }
