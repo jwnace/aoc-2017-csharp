@@ -32,7 +32,7 @@ public static class Day21
                     {
                         var chunk = new[]
                         {
-                            new[] { image[r][c], image[r][c + 1], },
+                            new[] { image[r    ][c], image[r    ][c + 1], },
                             new[] { image[r + 1][c], image[r + 1][c + 1], },
                         };
 
@@ -63,7 +63,7 @@ public static class Day21
                     {
                         var chunk = new[]
                         {
-                            new[] { image[r][c], image[r][c + 1], image[r][c + 2] },
+                            new[] { image[r    ][c], image[r    ][c + 1], image[r    ][c + 2] },
                             new[] { image[r + 1][c], image[r + 1][c + 1], image[r + 1][c + 2] },
                             new[] { image[r + 2][c], image[r + 2][c + 1], image[r + 2][c + 2] },
                         };
@@ -80,11 +80,98 @@ public static class Day21
 
                 image = CombineChunks(enhancedChunks) ?? image;
             }
+
+            // Console.WriteLine(string.Join(Environment.NewLine, image.Select(row => string.Join("", row))));
+            // Console.WriteLine();
         }
 
-        Console.WriteLine(string.Join(Environment.NewLine, image.Select(row => string.Join("", row))));
+        return image.Sum(chars => chars.Count(c => c == '#'));
+    }
 
-        return 1;
+    public static int Part2()
+    {
+        var rules = GetRules();
+
+        var image = new[]
+        {
+            new[] { '.', '#', '.' },
+            new[] { '.', '.', '#' },
+            new[] { '#', '#', '#' },
+        };
+
+        for (var i = 0; i < 18; i++)
+        {
+            if (image.Length % 2 == 0)
+            {
+                // TODO: divide up into 2x2 chunks
+                var chunkSize = 2;
+                var chunksPerRow = image.Length / chunkSize;
+                var chunkCount = chunksPerRow * chunksPerRow;
+                var chunks = new List<char[][]>();
+                var enhancedChunks = new List<char[][]>();
+
+                for (var r = 0; r < chunksPerRow * chunkSize; r += chunkSize)
+                {
+                    for (var c = 0; c < chunksPerRow * chunkSize; c += chunkSize)
+                    {
+                        var chunk = new[]
+                        {
+                            new[] { image[r    ][c], image[r    ][c + 1], },
+                            new[] { image[r + 1][c], image[r + 1][c + 1], },
+                        };
+
+                        chunks.Add(chunk);
+                    }
+                }
+
+                foreach (var chunk in chunks)
+                {
+                    var newChunk = EnhanceChunk(rules, chunk);
+                    enhancedChunks.Add(newChunk);
+                }
+
+                image = CombineChunks(enhancedChunks) ?? image;
+            }
+            else if (image.Length % 3 == 0)
+            {
+                // TODO: divide up into 3x3 chunks
+                var chunkSize = 3;
+                var chunksPerRow = image.Length / chunkSize;
+                var chunkCount = chunksPerRow * chunksPerRow;
+                var chunks = new List<char[][]>();
+                var enhancedChunks = new List<char[][]>();
+
+                for (var r = 0; r < chunksPerRow * chunkSize; r += chunkSize)
+                {
+                    for (var c = 0; c < chunksPerRow * chunkSize; c += chunkSize)
+                    {
+                        var chunk = new[]
+                        {
+                            new[] { image[r    ][c], image[r    ][c + 1], image[r    ][c + 2] },
+                            new[] { image[r + 1][c], image[r + 1][c + 1], image[r + 1][c + 2] },
+                            new[] { image[r + 2][c], image[r + 2][c + 1], image[r + 2][c + 2] },
+                        };
+
+                        chunks.Add(chunk);
+                    }
+                }
+
+                foreach (var chunk in chunks)
+                {
+                    var newChunk = EnhanceChunk(rules, chunk);
+                    enhancedChunks.Add(newChunk);
+                }
+
+                image = CombineChunks(enhancedChunks) ?? image;
+            }
+
+            // Console.WriteLine(string.Join(Environment.NewLine, image.Select(row => string.Join("", row))));
+            // Console.WriteLine();
+        }
+
+
+
+        return image.Sum(chars => chars.Count(c => c == '#'));
     }
 
     private static char[][] CombineChunks(List<char[][]> chunks)
@@ -97,38 +184,15 @@ public static class Day21
         var chunksPerRow = (int)Math.Sqrt(chunks.Count);
         var chunkSize = chunks[0].Length;
         var image = new List<List<char>>();
-        var temp = chunks.Chunk(chunksPerRow).ToList();
-        var row = 0;
+        var chunkedChunks = chunks.Chunk(chunksPerRow).ToArray();
 
-        foreach (var chunkRow in temp)
+        for (var i = 0; i < chunksPerRow * chunkSize; i++)
         {
-
-            foreach (var chunk in chunkRow)
-            {
-                foreach (var rowOfCharacters in chunk)
-                {
-                    foreach (var character in rowOfCharacters)
-                    {
-
-                    }
-                }
-            }
-
-            row += chunksPerRow;
+            var query = chunkedChunks[i / chunkSize].Select(x => x[i % chunkSize]);
+            image.Add(query.SelectMany(x => x).ToList());
         }
 
-        for (var chunk = 0; chunk < chunks.Count; chunk++)
-        {
-            for (var i = 0; i < chunks[chunk].Length; i++)
-            {
-                for (var j = 0; j < chunks[chunk][i].Length; j++)
-                {
-
-                }
-            }
-        }
-
-        return null;
+        return image.Select(x => x.ToArray()).ToArray();
     }
 
     private static char[][] EnhanceChunk(List<Rule> rules, char[][] image)
@@ -138,6 +202,7 @@ public static class Day21
 
         if (firstMatchingRule is null)
         {
+            throw new InvalidOperationException("couldn't find a matching rule!");
             return image;
         }
 
@@ -147,10 +212,13 @@ public static class Day21
 
         if (firstMatchingPattern is null)
         {
+            throw new InvalidOperationException("couldn't find a matching pattern!");
             return image;
         }
 
-        var index = firstMatchingPattern.Index;
+        // TODO: we don't actually need to match the index, we can just use index 0
+        // var index = firstMatchingPattern.Index;
+        var index = 0;
         var outputPattern = firstMatchingRule.OutputPatterns[index];
 
         // TODO: this only works when the entire image matches a pattern
@@ -158,8 +226,6 @@ public static class Day21
         image = outputPattern;
         return image;
     }
-
-    public static int Part2() => 2;
 
     private static bool AreEquivalent(char[][] pattern, char[][] image) =>
         pattern.SelectMany(c => c).SequenceEqual(image.SelectMany(c => c));
