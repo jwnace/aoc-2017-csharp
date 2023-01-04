@@ -7,79 +7,107 @@ public static class Day24
         .Select(values => new Component(values[0], values[1], false, false))
         .ToList();
 
-    public static int Part1()
+    public static int Part1() => GetStrongestBridge(0, Components);
+
+    public static int Part2() => GetStrongestLongestBridge(0, Components).Strength;
+
+    private static int GetStrongestBridge(int tail, List<Component> components)
     {
-        var result = 0;
+        var candidates = components
+            .Where(c => !c.IsPortAUsed && !c.IsPortBUsed)
+            .Where(c => c.PortA == tail || c.PortB == tail)
+            .ToList();
 
-        // HACK: make a copy of the original list of components since we're going to make changes to it
-        var components = Components.ToList();
-
-        // the first port you use must be of type 0
-        var startingComponents = components.Where(c => c.PortA == 0 || c.PortB == 0).ToList();
-
-        foreach (var start in startingComponents)
+        if (candidates.Count == 0)
         {
-            if (start.PortA == 0)
+            return 0;
+        }
+
+        var best = 0;
+        
+        foreach (var candidate in candidates)
+        {
+            var temp = candidate;
+            var newTail = 0;
+            
+            if (candidate.PortA == tail)
             {
-                start.IsPortAUsed = true;
+                temp = candidate with { IsPortAUsed = true };
+                newTail = candidate.PortB;
             }
-            else if (start.PortB == 0)
+            else if (candidate.PortB == tail)
             {
-                start.IsPortBUsed = true;
+                temp = candidate with { IsPortBUsed = true };
+                newTail = candidate.PortA;
             }
             else
             {
                 throw new InvalidOperationException("something went horribly wrong");
             }
 
-            result = Math.Max(result, GetStrongestBridge(start, components));
+            var newList = components.Except(new[] { candidate }).Append(temp).ToList();
+            best = Math.Max(best, candidate.PortA + candidate.PortB + GetStrongestBridge(newTail, newList));
         }
 
-        // It doesn't matter what type of port you end with; your goal is just to make the bridge as strong as possible.
-
-        // The strength of a bridge is the sum of the port types in each component. For example, if your bridge is made
-        // of components 0/3, 3/7, and 7/4, your bridge has a strength of 0+3 + 3+7 + 7+4 = 24.
-
-        return result;
+        return best;
     }
-
-    public static int Part2() => 2;
-
-    private static int GetStrongestBridge(Component start, List<Component> components)
+    
+    private static (int Length, int Strength) GetStrongestLongestBridge(int tail, List<Component> components)
     {
-        if (start.IsPortAUsed && start.IsPortBUsed)
+        var candidates = components
+            .Where(c => !c.IsPortAUsed && !c.IsPortBUsed)
+            .Where(c => c.PortA == tail || c.PortB == tail)
+            .ToList();
+
+        if (candidates.Count == 0)
         {
-            throw new InvalidOperationException("both ports are already in use");
+            return (0, 0);
         }
 
-        var tail = start.IsPortAUsed ? start.PortB : start.PortA;
+        var bestLength = 0;
+        var bestStrength = 0;
+        
+        foreach (var candidate in candidates)
+        {
+            Component temp;
+            int newTail;
+            
+            if (candidate.PortA == tail)
+            {
+                temp = candidate with { IsPortAUsed = true };
+                newTail = candidate.PortB;
+            }
+            else if (candidate.PortB == tail)
+            {
+                temp = candidate with { IsPortBUsed = true };
+                newTail = candidate.PortA;
+            }
+            else
+            {
+                throw new InvalidOperationException("something went horribly wrong");
+            }
 
-        var potentialNextComponents = components.Where(c => !c.IsPortAUsed && !c.IsPortBUsed);
+            // TODO: I think I don't need to append temp... and I can get rid of the IsPortXUsed checks
+            var newList = components.Except(new[] { candidate }).Append(temp).ToList();
+            
+            var (tempLength, tempStrength) = GetStrongestLongestBridge(newTail, newList);
 
-        throw new NotImplementedException();
+            var candidateLength = tempLength + 1;
+            var candidateStrength = candidate.PortA + candidate.PortB + tempStrength;
+            
+            if (candidateLength >= bestLength)
+            {
+                bestLength = candidateLength;
+
+                if (candidateStrength >= bestStrength)
+                {
+                    bestStrength = candidateStrength;
+                }
+            }
+        }
+
+        return (bestLength, bestStrength);
     }
-
-    private class Component
-    {
-        public Component(int portA, int portB, bool isPortAUsed, bool isPortBUsed)
-        {
-            PortA = portA;
-            PortB = portB;
-            IsPortAUsed = isPortAUsed;
-            IsPortBUsed = isPortBUsed;
-        }
-
-        public int PortA { get; init; }
-        public int PortB { get; init; }
-        public bool IsPortAUsed { get; set; }
-        public bool IsPortBUsed { get; set; }
-
-        public void Deconstruct(out int portA, out int portB, out bool isPortAUsed, out bool isPortBUsed)
-        {
-            portA = PortA;
-            portB = PortB;
-            isPortAUsed = IsPortAUsed;
-            isPortBUsed = IsPortBUsed;
-        }
-    }
+    
+    private record Component(int PortA, int PortB, bool IsPortAUsed, bool IsPortBUsed);
 }
